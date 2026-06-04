@@ -11,6 +11,7 @@ import {
 import Slider from '@react-native-community/slider';
 
 import { EycaCalloutButton } from './components/EycaCalloutButton';
+import { PromotionalBannerStack } from './components/PromotionalBannerStack';
 
 export type SpringPreset = {
   name: string;
@@ -32,6 +33,7 @@ const SPRING_PRESETS: SpringPreset[] = [
 const DEFAULT_SPRING = SPRING_PRESETS[SPRING_PRESETS.length - 1]; // Custom
 
 export default function App() {
+  const [tab, setTab] = useState<'button' | 'playground'>('button');
   const [key, setKey] = useState(0);
   const [playing, setPlaying] = useState(false);
   const [selected, setSelected] = useState<SpringPreset>(DEFAULT_SPRING);
@@ -74,6 +76,28 @@ export default function App() {
     <View style={styles.screen}>
       <StatusBar style="dark" />
 
+      <View style={styles.tabs}>
+        <Pressable
+          style={[styles.tab, tab === 'button' && styles.tabActive]}
+          onPress={() => setTab('button')}
+        >
+          <Text style={[styles.tabLabel, tab === 'button' && styles.tabLabelActive]}>Button</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.tab, tab === 'playground' && styles.tabActive]}
+          onPress={() => setTab('playground')}
+        >
+          <Text style={[styles.tabLabel, tab === 'playground' && styles.tabLabelActive]}>Playground</Text>
+        </Pressable>
+      </View>
+
+      {tab === 'playground' && (
+        <View style={styles.placeholder}>
+          <PromotionalBannerStack />
+        </View>
+      )}
+
+      {tab === 'button' && <>
       <View style={styles.controls}>
         <Pressable
           style={({ pressed }) => [
@@ -227,6 +251,7 @@ export default function App() {
           <Text style={styles.sliderValue}>{tension}</Text>
         </View>
       </View>
+      </>}
     </View>
   );
 }
@@ -276,6 +301,46 @@ const styles = StyleSheet.create({
   },
   activeLabel: {
     color: '#FFF',
+  },
+  tabs: {
+    position: 'absolute',
+    top: 60,
+    left: 16,
+    flexDirection: 'row',
+    gap: 4,
+    backgroundColor: '#EFEFED',
+    borderRadius: 10,
+    padding: 3,
+  },
+  tab: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  tabActive: {
+    backgroundColor: '#FFF',
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 1 },
+  },
+  tabLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#888',
+  },
+  tabLabelActive: {
+    color: '#1A1A1A',
+    fontWeight: '600',
+  },
+  placeholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: '#888',
   },
   sliders: {
     width: '100%',
